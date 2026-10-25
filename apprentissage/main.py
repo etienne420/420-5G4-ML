@@ -106,4 +106,4 @@ plt.show()
 
 #Sauvegarde du Dataframe Pokedex
 dataset = nouveauPokedex
-dataset.to_csv("apprentissage/datas/dataset.csv", sep='\t')
+dataset.to_csv("datas/dataset.csv", sep='\t')
