@@ -1,9 +1,11 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 pd.set_option('display.max_columns', None)  # Show all columns
 pd.set_option('future.no_silent_downcasting', True)
 
-nosPokemons = pd.read_csv("datas/pokedex.csv")
+nosPokemons = pd.read_csv("apprentissage/datas/pokedex.csv")
 
 #Affichage des colonnes du Dataframe
 print(nosPokemons.columns.values)
@@ -33,7 +35,7 @@ nosPokemonsClean.loc[62, 'NOM'] = "Colossinge"
 print(nosPokemonsClean['NOM'][62])
 
 #Chargement des données des combats
-combats = pd.read_csv("datas/combats.csv")
+combats = pd.read_csv("apprentissage/datas/combats.csv")
 
 #Affichage des colonnes du Dataframe
 print(combats.columns.values)
@@ -76,3 +78,32 @@ print(listeAAgreger)
 
 nouveauPokedex = nosPokemonsClean.merge(listeAAgreger, left_on='NUMERO', right_index = True, how='left')
 print(nouveauPokedex.describe())
+
+axe_X = sns.countplot(x="TYPE_1", hue="LEGENDAIRE", data=nouveauPokedex)
+plt.xticks(rotation= 90)
+plt.xlabel('TYPE_1')
+plt.ylabel('Total ')
+plt.title("POKEMONS DE TYPE_1")
+plt.show()
+
+axe_X = sns.countplot(x="TYPE_2", hue="LEGENDAIRE", data=nouveauPokedex)
+plt.xticks(rotation= 90)
+plt.xlabel('TYPE_2')
+plt.ylabel('Total ')
+plt.title("POKEMONS DE TYPE_2")
+plt.show()
+
+print(nouveauPokedex.groupby('TYPE_1').agg({"POURCENTAGE_DE_VICTOIRES": "mean"}).sort_values(by = "POURCENTAGE_DE_VICTOIRES"))
+
+corr = nouveauPokedex.loc[:,['POINTS_DE_VIE','NIVEAU_ATTAQUE',
+'NIVEAU_DEFENSE','NIVEAU_ATTAQUE_SPECIALE','NIVEAU_DEFENSE_SPECIALE',
+'VITESSE','LEGENDAIRE','POURCENTAGE_DE_VICTOIRES']].corr()
+
+sns.heatmap(corr,
+xticklabels=corr.columns,
+yticklabels=corr.columns, annot=True)
+plt.show()
+
+#Sauvegarde du Dataframe Pokedex
+dataset = nouveauPokedex
+dataset.to_csv("apprentissage/datas/dataset.csv", sep='\t')
